@@ -2,10 +2,11 @@ datasets
 libraries
 FTBench/dask
 FTBench/keras
-FTBench/cikit-learn
+FTBench/scikit-learn
 FTBench/sparkml
-FRBench/systemds
-micronechmarks
+FTBench/systemds
+FTBench/ml.net_nimbusml
+microbenchmarks
 plots
 main.sh
 README.md
