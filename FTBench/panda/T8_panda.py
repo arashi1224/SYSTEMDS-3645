@@ -42,7 +42,7 @@ def transform_panda(X):
 
     final_df = pd.concat(result, axis=1)
 
-    return final_df
+    return csr_matrix(final_df.astype(float).values)
 
 if __name__ == '__main__':
     home = readNprep()
