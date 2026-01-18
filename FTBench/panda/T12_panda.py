@@ -72,7 +72,7 @@ if __name__ == "__main__":
     
     # Save RAW dataset
     print("\nSaving RAW dataset...")
-    df_t12.to_csv("T12_synthetic_raw.csv", index=False)
+    df_t12.to_csv("SYSTEMDS-3645\\FTBench\\panda\\T12_synthetic_raw.csv", index=False)
     print("✓ Saved T12_synthetic_raw.csv (100K x 100)")
     
     # Run transformation
@@ -81,11 +81,11 @@ if __name__ == "__main__":
     
     # Save transformed dataset
     print("\nSaving TRANSFORMED dataset...")
-    df_transformed.to_csv("T12_synthetic_transformed.csv", index=False)
+    df_transformed.to_csv("SYSTEMDS-3645\\FTBench\\panda\\T12_synthetic_transformed.csv", index=False)
     print("✓ Saved T12_synthetic_transformed.csv (100K x 100)")
     
     # Save timing
-    with open("T12_FTBench_timing.dat", "w") as f:
+    with open("SYSTEMDS-3645\\FTBench\\panda\\T12_FTBench_timing.dat", "w") as f:
         f.write(str(round(t_total, 3)))
     print("✓ Saved timing to T12_FTBench_timing.dat")
     
