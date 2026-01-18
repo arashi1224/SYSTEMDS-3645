@@ -2,7 +2,7 @@ import pandas as pd
 from sklearn.preprocessing import KBinsDiscretizer, OneHotEncoder
 from scipy import sparse
 
-# 1) Load dataset (assumed downloaded already)
+# 1) Load dataset (ensure dataset is already downloaded)
 df = pd.read_csv("SYSTEMDS-3645\\FTBench\\panda\\T5_Dataset.csv")
 df = df.drop(columns=["target", "ID_code"])
 
@@ -19,7 +19,7 @@ binning = KBinsDiscretizer(
 
 X_binned = binning.fit_transform(X)
 
-# 3) Dummy-coding (one-hot encoding)
+# 3) Dummy-coding/one-hot encoding
 encoder = OneHotEncoder(
     sparse_output=True,
     handle_unknown="ignore"
@@ -28,6 +28,6 @@ encoder = OneHotEncoder(
 X_onehot = encoder.fit_transform(X_binned)
 
 # 4) Result: sparse matrix matching T5
-print(X.shape)       # (200000, 200)
-print(X_onehot.shape)  # ≈ (200000, 200 * 10)
-print(isinstance(X_onehot, sparse.spmatrix))  # True
+print(X.shape)       #(200000, 200)
+print(X_onehot.shape)  #≈(200000, 200 * 10)
+print(isinstance(X_onehot, sparse.spmatrix))  #True
