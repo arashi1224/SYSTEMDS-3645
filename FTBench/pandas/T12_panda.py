@@ -3,12 +3,11 @@ import pandas as pd
 import time
 from sklearn.preprocessing import KBinsDiscretizer, OrdinalEncoder
 from sklearn.compose import ColumnTransformer
-from sklearn.pipeline import Pipeline
 
 # 1. Generate synthetic dataset for T12 (100K x 100)
 def generate_dataset():
     np.random.seed(42)
-    rows = 100_000
+    rows = 100000
     num = 50
     cat = 50
 
@@ -72,7 +71,7 @@ if __name__ == "__main__":
     
     # Save RAW dataset
     print("\nSaving raw dataset..")
-    df_t12.to_csv("SYSTEMDS-3645\\FTBench\\panda\\T12_synthetic_raw.csv", index=False)
+    df_t12.to_csv("SYSTEMDS-3645\\FTBench\\pandas\\T12_synthetic_raw.csv", index=False)
     print("Saved T12 raw dataset (100000 x 100)")
     
     # Run transformation
@@ -81,11 +80,11 @@ if __name__ == "__main__":
     
     # Save transformed dataset
     print("\nSaving transformed dataset..")
-    df_transformed.to_csv("SYSTEMDS-3645\\FTBench\\panda\\T12_synthetic_transformed.csv", index=False)
+    df_transformed.to_csv("SYSTEMDS-3645\\FTBench\\pandas\\T12_synthetic_transformed.csv", index=False)
     print("Saved T12 transformed dataset (100000 x 100)")
     
     # Save timing
-    with open("SYSTEMDS-3645\\FTBench\\panda\\T12_FTBench_timing.dat", "w") as f:
+    with open("SYSTEMDS-3645\\FTBench\\pandas\\T12_FTBench_timing.dat", "w") as f:
         f.write(str(round(t_total, 3)))
     print("Saved timing to T12_FTBench_timing.dat")
     
