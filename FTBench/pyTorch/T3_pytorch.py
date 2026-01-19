@@ -6,22 +6,24 @@ import time
 # Methods was taken from T8:sk.py
 def readNprep(nRows):
     if nRows == 1:
-        criteo = pd.read_csv("../..datasets/criteo_day21_1M", delimiter=",", header=None)
+        criteo = pd.read_csv("../../datasets/criteo_day21_1M", delimiter=",", header=None)
     if nRows == 10:
-        criteo = pd.read_csv("../..datasets/criteo_day21_10M", delimiter=",", header=None)
+        criteo = pd.read_csv("../../datasets/criteo_day21_10M", delimiter=",", header=None)
     
-    criteo = criteo.fillna(method="ffill").fillna(method="bfill")
-    print(criteo.head())
-    print(criteo.info())
+    # Columns 0-12 are Numerical (I1-I13)
+    # Columns 13-38 are Categorical
+    # num_cols = list(range(0, 13))
+    # cat_cols = list(range(13, 39))
+    criteo_cats = criteo.iloc[:, 13:39]
+    criteo_cats = criteo_cats.fillna(method="ffill").fillna(method="bfill")
+    print(criteo_cats.head())
+    print(criteo_cats.info())
     return criteo
 
 def transform_pytorch(df):
     base = df.copy(deep=True)
-    # Columns 0-12 are Numerical (I1-I13)
-    # Columns 13-38 are Categorical (C1-C26)
-    num_cols = list(range(0, 13))
-    cat_cols = list(range(13, 39))
 
+    cat_cols = base.columns
     coords_rows = []
     coords_cols = []
     coords_vals = []
@@ -29,13 +31,8 @@ def transform_pytorch(df):
 
     N = len(base)
 
-    passthrough_col = []
-    for col in base.columns:
-        if col not in cat_cols:
-            passthrough_col.append(col)
-
     for col in cat_cols:
-        raw_vals = df[col].astype(str).values
+        raw_vals = base[col].astype(str).values
         uniques = np.unique(raw_vals)
         token_ids = np.searchsorted(uniques, raw_vals) # same as bucketise, but for string
         token_ids = torch.from_numpy(token_ids)
@@ -61,7 +58,7 @@ def transform_pytorch(df):
     return sparse_tensor.to_sparse_csr()
 
 if __name__ == '__main__':
-    criteo_cat = readNprep()
+    criteo_cat = readNprep(10)
 
     t1 = time.time()
     X_transformed = transform_pytorch(criteo_cat)
