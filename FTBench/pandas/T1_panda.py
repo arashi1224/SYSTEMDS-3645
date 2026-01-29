@@ -44,10 +44,15 @@ def transform_pandas(df):
 
 if __name__ == '__main__':
     adult = readNprep()
+    timers = np.zeros(3)
 
-    t1 = time.time()
-    X_transformed = transform_pandas(adult)
-    print(f"Elapsed time for transform = {(time.time() - t1) *1000:.2f} millisec")
-    
-    print(f"\tOriginal shape: {adult.shape}")
-    print(f"\tTransformed shape: {X_transformed.shape}")
+    for i in range(3):
+        t1 = time.time()
+        X_transformed = transform_pandas(adult)
+
+        timers[i] = (time.time() - t1) * 1000
+        print(f"Elapsed time for transform = {(time.time() - t1) * 1000} millisec")
+
+        print(f"\tOriginal shape: {adult.shape}")
+        print(f"\tTransformed shape: {X_transformed.shape}")
+    np.savetxt("adult_pandas.dat", [np.mean(timers)], delimiter="\t", fmt='%f')
