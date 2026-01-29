@@ -9,7 +9,7 @@ def readNprep():
     print(adult.info())
     return adult
 
-def transform_python(df):
+def transform_pytorch(df):
     
     bin_cols = [0, 2, 10, 11, 12]
     cat_cols = [1, 3, 5, 6, 7, 8, 9, 13, 14]
@@ -81,10 +81,15 @@ def transform_python(df):
 if __name__ == '__main__':
     adult = readNprep()
     print(adult)
+    timers = np.zeros(3)
 
-    t1 = time.time()
-    X_transformed = transform_python(adult)
-    print(f"Elapsed time for transform = {(time.time() - t1) *1000:.2f} millisec")
-    
-    print(f"\tOriginal shape: {adult.shape}")
-    print(f"\tTransformed shape: {X_transformed.shape}")
+    for i in range(3):
+        t1 = time.time()
+        X_transformed = transform_pytorch(adult)
+
+        timers[i] = (time.time() - t1) * 1000
+        print(f"Elapsed time for transform = {timers[i]} millisec")
+
+        print(f"\tOriginal shape: {adult.shape}")
+        print(f"\tTransformed shape: {X_transformed.shape}")
+    np.savetxt("adult_pytorch.dat", [np.mean(timers)], delimiter="\t", fmt='%f')

@@ -53,11 +53,15 @@ def transform_pytorch_t9(df):
 
 if __name__ == '__main__':
     cat_dat = readNprep()
+    timers = np.zeros(3)
 
-    t1 = time.time()
-    X_transformed = transform_pytorch_t9(cat_dat)
-    
-    print(f"Elapsed time for transform = {(time.time() - t1) * 1000} millisec")
-    
-    print(f"\tOriginal shape: {cat_dat.shape}")
-    print(f"\tTransformed shape: {X_transformed.shape}")
+    for i in range(3):
+        t1 = time.time()
+        X_transformed = transform_pytorch_t9(cat_dat)
+
+        timers[i] = (time.time() - t1) * 1000
+        print(f"Elapsed time for transform = {(time.time() - t1) * 1000} millisec")
+
+        print(f"\tOriginal shape: {cat_dat.shape}")
+        print(f"\tTransformed shape: {X_transformed.shape}")
+    np.savetxt("catDat_pytorch.dat", [np.mean(timers)], delimiter="\t", fmt='%f')

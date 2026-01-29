@@ -12,7 +12,7 @@ def readNprep():
     print(santander.info())
     return santander
 
-def transform_python(df):
+def transform_pytorch(df):
     base = df.copy(deep=True)
 
     bin_cols = base.columns
@@ -56,12 +56,16 @@ def transform_python(df):
     return sparse_tensor.to_sparse_csr()
 
 if __name__ == '__main__':
-    stantander = readNprep()
-    print(stantander)
+    santander = readNprep()
+    timers = np.zeros(3)
 
-    t1 = time.time()
-    X_transformed = transform_python(stantander)
-    print(f"Elapsed time for transform = {(time.time() - t1) *1000:.2f} millisec")
-    
-    print(f"\tOriginal shape: {stantander.shape}")
-    print(f"\tTransformed shape: {X_transformed.shape}")
+    for i in range(3):
+        t1 = time.time()
+        X_transformed = transform_pytorch(santander)
+
+        timers[i] = round(time.time() - t1,1)
+        print(f"Elapsed time for transform = {(time.time() - t1) * 1000} millisec")
+
+        print(f"\tOriginal shape: {santander.shape}")
+        print(f"\tTransformed shape: {X_transformed.shape}")
+    np.savetxt("santander_pytorch.dat", [round(np.mean(timers),1)], delimiter="\t", fmt='%f')

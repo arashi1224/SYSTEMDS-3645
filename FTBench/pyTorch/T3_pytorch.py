@@ -59,10 +59,15 @@ def transform_pytorch(df):
 
 if __name__ == '__main__':
     criteo_cat = readNprep(10)
+    timers = np.zeros(3)
 
-    t1 = time.time()
-    X_transformed = transform_pytorch(criteo_cat)
-    print(f"Elapsed time for transform = {(time.time() - t1) *1000} millisec")
-    
-    print(f"\tOriginal shape: {criteo_cat.shape}")
-    print(f"\tTransformed shape: {X_transformed.shape}")
+    for i in range(3):
+        t1 = time.time()
+        X_transformed = transform_pytorch(criteo_cat)
+
+        timers[i] = (time.time() - t1) * 1000
+        print(f"Elapsed time for transform = {(time.time() - t1) * 1000} millisec")
+
+        print(f"\tOriginal shape: {criteo_cat.shape}")
+        print(f"\tTransformed shape: {X_transformed.shape}")
+    np.savetxt("criteo_pytorch.dat", [np.mean(timers)], delimiter="\t", fmt='%f')

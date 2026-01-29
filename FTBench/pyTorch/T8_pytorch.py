@@ -76,7 +76,9 @@ if __name__ == '__main__':
 
     t1 = time.time()
     X_transformed = transform_pytorch(home)
-    print(f"Elapsed time for transform = {(time.time() - t1) *1000} millisec")
+    timers = round(time.time() - t1,1)
+    print(f"Elapsed time for transform = {timers} millisec")
     
     print(f"\tOriginal shape: {home.shape}")
     print(f"\tTransformed shape: {X_transformed.shape}")
+    np.savetxt("homecredit_pytorch.dat", [timers], delimiter="\t", fmt='%f')
