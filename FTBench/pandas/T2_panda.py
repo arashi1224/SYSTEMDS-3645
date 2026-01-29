@@ -1,9 +1,9 @@
-import torch
 import pandas as pd
 import numpy as np
 import time
+from scipy.sparse import csr_matrix
+from scipy.sparse import coo_matrix
 
-# taken from keras T2
 def readNprep():
     # Read and isolate target and training data
     kdd = pd.read_csv("../../datasets/KDD98.csv", delimiter=",", header=None)
@@ -29,90 +29,90 @@ def readNprep():
     print("head: \n", kddX.info())
     return kddX
 
-def transform_pytorch(df):
+# differ implementation to make this actually running
+def transform_pandas(df):
     base = df.copy(deep=True)
     
     fl = base.select_dtypes(include=np.float64).columns
     cat = base.select_dtypes(exclude=np.float64).columns
-
+    
+    print(f"Number of numerical columns to bin: {len(fl)}")
+    print(f"Number of categorical columns: {len(cat)}")
+    
+    # Lists to collect sparse matrix coordinates
     coords_rows = []
     coords_cols = []
     coords_vals = []
     current_col_offset = 0
-
     N = len(df)
-
+    
+    # Step 1: Process numerical columns - bin and scale
     for col in fl:
-        raw_vals = pd.to_numeric(base[col], errors='coerce').dropna().values
-        tensor_vals = torch.from_numpy(raw_vals).float()
-
-        min_val, max_val = raw_vals.min(), raw_vals.max()
-        # 5 bins = 6 edges
-        boundaries = torch.linspace(min_val, max_val, steps=6)
+        raw_vals = pd.to_numeric(base[col], errors='coerce')
+        raw_vals = raw_vals.fillna(raw_vals.median())  # Handle NaN
+        raw_vals_array = raw_vals.values
+        
+        min_val, max_val = raw_vals_array.min(), raw_vals_array.max()
+        boundaries = np.linspace(min_val, max_val, num=6)
         boundaries[0] -= 0.001
         boundaries[-1] += 0.001
-            
-        bin_indices = torch.bucketize(tensor_vals, boundaries) - 1
-        bin_indices = torch.clamp(bin_indices, 0, 4)
-
-        counts = torch.bincount(bin_indices, minlength=5).float()
+        
+        bin_indices = np.searchsorted(boundaries, raw_vals_array, side='right') - 1
+        bin_indices = np.clip(bin_indices, 0, 4)
+        
+        counts = np.bincount(bin_indices, minlength=5)
         probs = counts / N
-        # standard deviation of a binary variable = sqrt(p(1-p))
-        stds = torch.sqrt(probs * (1 - probs)) + 1e-8
+        
+        stds = np.sqrt(probs * (1 - probs)) + 1e-8
         scaling_factors = 1.0 / stds
-
+        
         values = scaling_factors[bin_indices]
         
-        coords_rows.append(torch.arange(N))
+        coords_rows.append(np.arange(N))
         coords_cols.append(bin_indices + current_col_offset)
         coords_vals.append(values)
         
         current_col_offset += 5
-    print("cols for binning: ", current_col_offset)
-
+    
+    print(f"Columns after binning: {current_col_offset}")
+    
     for col in cat:
         raw_vals = base[col].astype(str).values
-        uniques, counts = np.unique(raw_vals, return_counts = True)
-        token_ids = np.searchsorted(uniques, raw_vals) # same as bucketise, but for string
-        token_ids = torch.from_numpy(token_ids)
-
-        probs = torch.tensor(counts / N, dtype=torch.float32)
-        stds = torch.sqrt(probs * (1 - probs)) + 1e-8
+        uniques, counts = np.unique(raw_vals, return_counts=True)
+        token_ids = np.searchsorted(uniques, raw_vals)
+        probs = counts / N
+        stds = np.sqrt(probs * (1 - probs)) + 1e-8
         scaling_factors = 1.0 / stds
         
         values = scaling_factors[token_ids]
-
-        coords_rows.append(torch.arange(N))
+        
+        coords_rows.append(np.arange(N))
         coords_cols.append(token_ids + current_col_offset)
         coords_vals.append(values)
         
         current_col_offset += len(uniques)
     
+    print(f"Total columns after all transformations: {current_col_offset}")
     
-    print("total cols: ", current_col_offset)
-    
-    # Combine from all cols
-    final_rows = torch.cat(coords_rows).long()
-    final_cols = torch.cat(coords_cols).long()
-    final_vals = torch.cat(coords_vals).float()
-
-    # Create Sparse Matrix (COO)
-    sparse_tensor = torch.sparse_coo_tensor(
-        torch.stack([final_rows, final_cols]),
-        final_vals,
-        size=(N, current_col_offset)
+    final_rows = np.concatenate(coords_rows)
+    final_cols = np.concatenate(coords_cols)
+    final_vals = np.concatenate(coords_vals)
+    sparse_matrix = coo_matrix(
+        (final_vals, (final_rows, final_cols)),
+        shape=(N, current_col_offset)
     )
-
-    return sparse_tensor.to_sparse_csr()
+    
+    # Convert to CSR (Compressed Sparse Row) for efficiency
+    return sparse_matrix.tocsr()
 
 if __name__ == '__main__':
     kdd = readNprep()
     t1 = time.time()
-    X_transformed = transform_pytorch(kdd)
+    X_transformed = transform_pandas(kdd)
 
     timers = round(time.time() - t1,1)
     print(f"Elapsed time for transform = {timers} sec")
 
     print(f"\tOriginal shape: {kdd.shape}")
     print(f"\tTransformed shape: {X_transformed.shape}")
-    np.savetxt("kdd_pytorch.dat", [timers], delimiter="\t", fmt='%f')
+    np.savetxt("kdd_pandas.dat", [timers], delimiter="\t", fmt='%f')

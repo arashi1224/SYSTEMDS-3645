@@ -66,7 +66,7 @@ if __name__ == '__main__':
         X_transformed = transform_pytorch(criteo_cat)
 
         timers[i] = (time.time() - t1) * 1000
-        print(f"Elapsed time for transform = {(time.time() - t1) * 1000} millisec")
+        print(f"Elapsed time for transform = {(time.time() - t1) * 1000} sec")
 
         print(f"\tOriginal shape: {criteo_cat.shape}")
         print(f"\tTransformed shape: {X_transformed.shape}")

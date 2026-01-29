@@ -60,7 +60,7 @@ if __name__ == '__main__':
         X_transformed = transform_pytorch_t9(cat_dat)
 
         timers[i] = (time.time() - t1) * 1000
-        print(f"Elapsed time for transform = {(time.time() - t1) * 1000} millisec")
+        print(f"Elapsed time for transform = {timers[i]} sec")
 
         print(f"\tOriginal shape: {cat_dat.shape}")
         print(f"\tTransformed shape: {X_transformed.shape}")

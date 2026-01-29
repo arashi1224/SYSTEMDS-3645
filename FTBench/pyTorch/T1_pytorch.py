@@ -87,8 +87,8 @@ if __name__ == '__main__':
         t1 = time.time()
         X_transformed = transform_pytorch(adult)
 
-        timers[i] = (time.time() - t1) * 1000
-        print(f"Elapsed time for transform = {timers[i]} millisec")
+        timers[i] = (time.time() - t1)
+        print(f"Elapsed time for transform = {timers[i]} sec")
 
         print(f"\tOriginal shape: {adult.shape}")
         print(f"\tTransformed shape: {X_transformed.shape}")

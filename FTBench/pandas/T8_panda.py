@@ -50,7 +50,7 @@ if __name__ == '__main__':
     t1 = time.time()
     X_transformed = transform_panda(home)
     timers = round(time.time() - t1,1)
-    print(f"Elapsed time for transform = {timers} millisec")
+    print(f"Elapsed time for transform = {timers} sec")
     
     print(f"\tOriginal shape: {home.shape}")
     print(f"\tTransformed shape: {X_transformed.shape}")

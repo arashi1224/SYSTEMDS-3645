@@ -5,7 +5,7 @@ from sklearn.preprocessing import KBinsDiscretizer, OneHotEncoder
 from scipy import sparse
 
 # 1) Load dataset (ensure dataset is already downloaded)
-df = pd.read_csv("SYSTEMDS-3645\\FTBench\\panda\\T5_Dataset.csv")
+df = pd.read_csv("../../datasets/santander.csv", delimiter=",", header=None)
 df = df.drop(columns=["target", "ID_code"])
 
 # Ensure only feature columns are used
