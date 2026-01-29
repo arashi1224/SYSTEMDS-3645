@@ -7,7 +7,6 @@ FTBench/sparkml
 FTBench/systemds
 FTBench/ml.net_nimbusml
 microbenchmarks
-plots
 main.sh
 README.md
 setup.out
