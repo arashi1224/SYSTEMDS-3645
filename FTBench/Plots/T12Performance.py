@@ -4,18 +4,18 @@ from matplotlib.ticker import FuncFormatter
 
 #Mean execution times (seconds)
 data = np.array([
-    # [5],      #UPLIFT
+    [38.88],      #UPLIFT
     [0.82]    #Pandas
 ])
 
 labels = [
-    # "UPLIFT",
+    "UPLIFT",
     "Pandas",
 ]
 
 plot_colors = [
     "red",
-    # "orange",
+    "orange",
 ]
 
 #Plot
@@ -23,7 +23,7 @@ n_bars = len(data)
 x = np.arange(1)
 width = 0.2
 
-fig, ax = plt.subplots(figsize=(6, 5))
+fig, ax = plt.subplots(figsize=(6, 7))
 
 #Center bars around the single category
 for i in range(n_bars):
@@ -35,9 +35,9 @@ for i in range(n_bars):
         label=labels[i]
     )
 ax.set_yscale("log")
-ax.set_ylim(0, 1)
+ax.set_ylim(0, 45)
 
-yticks = [0.10, 0.20, 0.30, 0.40, 0.50, 1.00]
+yticks = [0.10, 0.20, 0.30, 0.40, 0.50, 1.00, 10.00, 20.00, 30.00, 35.00, 40.00]
 ax.set_yticks(yticks)
 
 ax.yaxis.set_major_formatter(

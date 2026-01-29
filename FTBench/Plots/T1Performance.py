@@ -6,14 +6,14 @@ from matplotlib.ticker import FuncFormatter
 data = np.array([
     [0.13],   #Pandas
     [9.51],   #PySpark MLlib
-    # [5],      #UPLIFT
+    [0.1128], #UPLIFT
     [0.22]    #PyTorch
 ])
 
 labels = [
     "Pandas",
     "PySpark MLlib",
-    # "UPLIFT",
+    "UPLIFT",
     "PyTorch",
 ]
 
@@ -21,7 +21,7 @@ plot_colors = [
     "red",
     "orange",
     "cornflowerblue",
-    # "brown"
+    "brown"
 ]
 
 #Plot

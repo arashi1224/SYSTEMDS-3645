@@ -4,18 +4,18 @@ from matplotlib.ticker import FuncFormatter
 
 #Mean execution times (seconds)
 data = np.array([
-    # [5],      #UPLIFT
+    [6.80],   #UPLIFT
     [1.58]    #PyTorch
 ])
 
 labels = [
-    # "UPLIFT",
+    "UPLIFT",
     "PyTorch",
 ]
 
 plot_colors = [
     "red",
-    # "orange",
+    "orange",
 ]
 
 #Plot
@@ -35,9 +35,9 @@ for i in range(n_bars):
         label=labels[i]
     )
 ax.set_yscale("log")
-ax.set_ylim(0, 5)
+ax.set_ylim(0, 8)
 
-yticks = [1.00, 2.00, 3.00, 4.00, 5.00]
+yticks = [1.00, 2.00, 3.00, 4.00, 5.00, 6.00, 7.00]
 ax.set_yticks(yticks)
 
 ax.yaxis.set_major_formatter(
